@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clear Service Worker</title>
+</head>
+<body>
+  <h1>Service Worker Cleanup</h1>
+  <button onclick="clearServiceWorkers()">Clear All Service Workers</button>
+  <button onclick="clearCache()">Clear All Caches</button>
+  <div id="status"></div>
+
+  <script>
+    async function clearServiceWorkers() {
+      const status = document.getElementById('status');
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (let registration of registrations) {
+          await registration.unregister();
+          status.innerHTML += `<p>Unregistered: ${registration.scope}</p>`;
+        }
+        status.innerHTML += '<p style="color: green;">All service workers cleared!</p>';
+      } catch (error) {
+        status.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+      }
+    }
+
+    async function clearCache() {
+      const status = document.getElementById('status');
+      try {
+        const cacheNames = await caches.keys();
+        for (let cacheName of cacheNames) {
+          await caches.delete(cacheName);
+          status.innerHTML += `<p>Deleted cache: ${cacheName}</p>`;
+        }
+        status.innerHTML += '<p style="color: green;">All caches cleared!</p>';
+      } catch (error) {
+        status.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
+
+
